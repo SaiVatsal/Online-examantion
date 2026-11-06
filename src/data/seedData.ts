@@ -129,6 +129,30 @@ export const SEED_PROFILES: UserProfile[] = [
 
   // Students / Candidates
   {
+    id: 'u-stud-surendra',
+    email: 'surendra@examflow.edu',
+    fullName: 'V Surendra',
+    role: 'student',
+    avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80',
+    phone: '+91 98480 40073',
+    registrationNumber: '2500040073',
+    isActive: true,
+    createdAt: '2026-02-01T10:00:00Z',
+    updatedAt: '2026-02-01T10:00:00Z',
+  },
+  {
+    id: 'u-stud-dileep',
+    email: 'dileep@examflow.edu',
+    fullName: 'K Dileep Kumar',
+    role: 'student',
+    avatarUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=256&q=80',
+    phone: '+91 98480 40145',
+    registrationNumber: '2500040145',
+    isActive: true,
+    createdAt: '2026-02-01T10:00:00Z',
+    updatedAt: '2026-02-01T10:00:00Z',
+  },
+  {
     id: 'u-stud-durga',
     email: 'durgaprasad@examflow.edu',
     fullName: 'Durga Prasad',

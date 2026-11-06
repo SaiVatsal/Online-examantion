@@ -1,3 +1,5 @@
+import { createJWT, setStoredToken, removeStoredToken, getStoredToken } from '../../lib/jwt';
+import { detectSqlInjection, sanitizeInput } from '../../lib/security';
 import {
   UserProfile,
   Subject,
@@ -55,11 +57,25 @@ class DatabaseService {
     this.state = this.loadFromStorage();
   }
 
-  private loadFromStorage(): DBState {
+    private loadFromStorage(): DBState {
     try {
       const stored = localStorage.getItem(`${STORAGE_KEY_PREFIX}state`);
       if (stored) {
-        return JSON.parse(stored);
+        const parsed: DBState = JSON.parse(stored);
+        for (const seed of SEED_PROFILES) {
+          const idx = parsed.profiles.findIndex(
+            (p) => p.id === seed.id || (seed.registrationNumber && p.registrationNumber === seed.registrationNumber)
+          );
+          if (idx === -1) {
+            parsed.profiles.unshift(seed);
+          } else {
+            parsed.profiles[idx] = { ...parsed.profiles[idx], ...seed };
+          }
+        }
+        if (parsed.currentUser && !getStoredToken()) {
+          setStoredToken(createJWT(parsed.currentUser));
+        }
+        return parsed;
       }
     } catch (e) {
       console.warn('Failed to read from localStorage, using initial seed data', e);
@@ -107,16 +123,46 @@ class DatabaseService {
     return this.state.currentUser;
   }
 
-  public async login(email: string, _password?: string): Promise<{ user: UserProfile; error?: string }> {
-    const user = this.state.profiles.find((p) => p.email.toLowerCase() === email.toLowerCase());
+  public async login(
+    email: string,
+    _password?: string
+  ): Promise<{ user: UserProfile; token?: string; error?: string }> {
+    // Anti-SQL Injection validation
+    const sqliCheck = detectSqlInjection(email);
+    if (sqliCheck.hasSqlInjection) {
+      await this.logAudit({
+        actorName: 'Security Shield',
+        action: 'SQL_INJECTION_BLOCKED',
+        resourceType: 'security',
+        metadata: {
+          pattern: sqliCheck.matchedPattern,
+          threatType: sqliCheck.threatType,
+        },
+      });
+      return {
+        user: null as any,
+        error: `SQL Injection Blocked: Pattern "${sqliCheck.matchedPattern}" intercepted by parameter shield.`,
+      };
+    }
+
+    const cleanInput = sanitizeInput(email).trim().toLowerCase();
+    const user = this.state.profiles.find((p) => {
+      const emailMatch = p.email.toLowerCase() === cleanInput;
+      const regMatch = p.registrationNumber && p.registrationNumber.toLowerCase() === cleanInput;
+      const nameMatch = p.fullName.toLowerCase() === cleanInput;
+      return emailMatch || regMatch || nameMatch;
+    });
+
     if (!user) {
-      return { user: null as any, error: 'Invalid email or password' };
+      return { user: null as any, error: 'Invalid email, registration number, or password' };
     }
     if (!user.isActive) {
       return { user: null as any, error: 'Your account has been deactivated. Please contact an administrator.' };
     }
 
     this.state.currentUser = user;
+    const token = createJWT(user);
+    setStoredToken(token);
     this.saveToStorage();
 
     await this.logAudit({
@@ -128,7 +174,7 @@ class DatabaseService {
       resourceId: user.id,
     });
 
-    return { user };
+    return { user, token };
   }
 
   public async logout(): Promise<void> {
@@ -143,12 +189,14 @@ class DatabaseService {
       });
     }
     this.state.currentUser = null;
+    removeStoredToken();
     this.saveToStorage();
   }
 
   public async switchUser(userId: string): Promise<UserProfile> {
     const user = this.state.profiles.find((p) => p.id === userId);
     if (!user) throw new Error('User not found');
+    setStoredToken(createJWT(user));
     this.state.currentUser = user;
     this.saveToStorage();
     return user;

@@ -28,3 +28,6 @@ Thumbs.db
 .env
 .env.production
 .env.local
+
+# Claude local settings
+.claude/

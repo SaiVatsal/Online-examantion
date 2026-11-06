@@ -1,34 +1,51 @@
 # Online-examantion
 
-> Enterprise Online Examination Platform with Server-Authoritative Proctoring, Fullscreen Lockdown, Anti-Cheating Detection, Question Banks, and Role-Based Dashboards.
+> Enterprise Online Examination Platform with Server-Authoritative Proctoring, Fullscreen Lockdown, Anti-Cheating Detection, Question Banks, Role-Based Dashboards, JWT Authentication, and Anti-SQL Injection Shield.
 
 ---
 
-## 🚀 Key Features
+## 🎓 Project Candidates & Contributors
 
-- **Multi-Role Access Control**:
-  - **Administrator** (`ironman@examflow.edu` / **Iron Man**): System configurations, user management, and security audit logs.
-  - **Instructor** (`instructor@examflow.edu` / **Prof. Padmanabha Simha**): Question authoring, 6-step exam builder, and manual essay grading.
-  - **Student** (`durgaprasad@examflow.edu` / **Durga Prasad**): Secure exam taking, live timers, auto-save, and instant scorecard reports.
-- **Strict Anti-Cheating & Proctoring Engine**:
-  - **Mandatory Fullscreen Lock**: Students cannot see questions until entering fullscreen mode.
-  - **Immediate Disconnection**: Tab switching (`visibilitychange`), exiting fullscreen (`fullscreenchange`), or window focus loss (`blur`) instantly terminates the test, hides all question assets, and flags the session for plagiarism.
-  - **Emergency Vigilance**: Directed immediately to Customer Care (**Batman** / `batman@examflow.edu`).
-- **Comprehensive Question Bank**: Supports Single Choice (MCQ), Multiple Select (MSQ), True/False, Short Answer, and Long Essay formats with rich evaluation rubrics.
-- **Pre-Configured Seed Datasets**:
-  - *Kids Easy Test – LKG / UKG / Kindergarten* (20 foundational questions)
-  - *Advanced Web Engineering & Distributed Architecture* (CS-302)
-  - *Tollywood Comedy & Brahmi Legend Exam – Fun Edition* (Featuring Gajala, Kill Bill Pandey, Relangi Mavayya, and Pullarao)
+* **V Surendra** — Registration Number: `2500040073`
+* **K Dileep Kumar** — Registration Number: `2500040145`
 
 ---
 
 ## 🔐 Credentials Directory
 
-| Role | Name | Email | Password |
-| :--- | :--- | :--- | :--- |
-| **Administrator** | Iron Man *(Tony Stark)* | `ironman@examflow.edu` *(or `admin@examflow.edu`)* | `Demo@123` |
-| **Student** | Durga Prasad | `durgaprasad@examflow.edu` *(or `student@examflow.edu`)* | `Demo@123` |
-| **Customer Care** | Batman *(Gotham HQ)* | `batman@examflow.edu` | `Demo@123` |
+| Role | Name | Identifier / Email | Registration No | Password | Quick Fill |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Administrator** | Administrator *(Iron Man / Tony Stark)* | `admin@examflow.edu` | `ADM-STARK-001` | `admin123` | `[⚡ Fill Admin]` |
+| **Student** | **V Surendra** | `surendra@examflow.edu` | `2500040073` | `student123` | `[⚡ Fill V Surendra]` |
+| **Student** | **K Dileep Kumar** | `dileep@examflow.edu` | `2500040145` | `student123` | `[⚡ Fill K Dileep]` |
+| **Customer Care** | Batman *(Emergency Care)* | `batman@examflow.edu` | `CARE-BATMAN-001` | `Demo@123` | — |
+
+*Note: You can log into student accounts using either their institutional email or their direct registration number.*
+
+---
+
+## 🚀 Key Features & Security Enhancements
+
+1. **JWT Token Authentication (RFC 7519 HS256)**:
+   - Cryptographically structured header, claims payload (`sub`, `email`, `role`, `regNo`, `exp`), and HMAC signature.
+   - Live **JWT Token Inspector** modal to view parsed claims and copy authorization Bearer tokens.
+
+2. **Anti-SQL Injection Shield**:
+   - Comprehensive pattern matching and parameter sanitization intercepting tautology attacks (`' OR '1'='1'`), union queries, delimiters (`--`, `/*`), and stacked commands.
+   - Real-time warning alerts and safe parameterized lookup defense.
+   - Interactive `[🧪 Test SQLi Block]` button to demonstrate live interceptor protection.
+
+3. **Interactive Security CAPTCHA**:
+   - HTML5 Canvas distorted alphanumeric CAPTCHA with noise lines, rotation, refresh button, and testing auto-fill.
+   - Blocks unauthorized automated form submission.
+
+4. **Exam Day Humor / Fun Zone 😂**:
+   - Integrated mood booster and humorous exam quotes generator with `[🎲 Next Joke]` on the login portal.
+
+5. **Multi-Role Access Control & Proctoring**:
+   - Strict fullscreen lockdown and proctoring engine.
+   - Instant tab-switch / focus loss detection with session flagging.
+   - Full support for MCQ, MSQ, True/False, Short Answer, and Long Essay question formats with rubrics.
 
 ---
 
@@ -37,6 +54,7 @@
 - **Frontend**: React 18, TypeScript, Vite
 - **Styling**: Tailwind CSS, Lucide React Icons
 - **Routing**: React Router v6
+- **Security**: JWT (RFC 7519), Canvas CAPTCHA, Parameterized Query Engine
 - **Architecture**: Dual-mode storage (Local persistent reactive state + Supabase PostgreSQL schema)
 
 ---
